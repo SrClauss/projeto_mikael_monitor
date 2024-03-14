@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "MonitorProjetos",
-    "version": "0.0.0"
+    "version": "1.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -24,7 +24,7 @@
     },
     "windows": [
       {
-        "title": "Monitor de Processos By: Mikael Bergamin 1.00",
+        "title": "Safra",
         "width": 800,
         "height": 900
       }

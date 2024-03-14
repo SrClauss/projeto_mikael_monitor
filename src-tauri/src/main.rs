@@ -14,65 +14,57 @@ fn insert_consultor(path: &str, consultor: &str, project_name: &str) -> String {
     // Leia o diretório
     let diretorio = fs::read_dir(path);
     if diretorio.is_err() {
-        return "Erro ao adicionar consultor".to_string();
+        return "Erro ao adicionar consultor - Diretorio inexistente".to_string();
     }
+    
 
     // Itere sobre as entradas do diretório
     for entrada in diretorio.unwrap() {
         if entrada.is_ok() {
             let entrada = entrada.unwrap();
-
+       
             // Verifique se a entrada é um diretório
             if entrada.file_type().unwrap().is_dir() {
+
                 // Verifique se o nome do diretório não é "CLIENTES"
                 if entrada.file_name() != "CLIENTES" {
+
                     // Procure dentro deste diretório um diretório chamado project_name
                     let diretorio_projeto = fs::read_dir(entrada.path().join(project_name));
+               
                     if diretorio_projeto.is_ok() {
+                        
+              
                         // Itere sobre as entradas do diretório do projeto
                         for entrada_projeto in diretorio_projeto.unwrap() {
                             if entrada_projeto.is_ok() {
+                                
+                                
                                 let entrada_projeto = entrada_projeto.unwrap();
+                     
+               
+                                if entrada_projeto.file_name() == "metadata.json" {
 
-                                // Procure um arquivo chamado metadata.json dentro do diretório do projeto
-                                let metadata = fs::read_to_string(
-                                    entrada_projeto.path().join("metadata.json"),
-                                );
-                                if metadata.is_ok() {
-                                    // Leia o conteúdo do arquivo metadata.json
-                                    let metadata = metadata.unwrap();
-
-                                    // Converta o conteúdo do arquivo metadata.json em um objeto JSON
-                                    let metadata_json = serde_json::from_str::<serde_json::Value>(
-                                        metadata.as_str(),
-                                    );
-                                    if metadata_json.is_ok() {
-                                        // Obtenha o objeto JSON convertido
-                                        let mut metadata_json = metadata_json.unwrap();
-
-                                        // Adicione a chave "consultor" ao objeto JSON
-                                        metadata_json["consultor"] = json!(consultor);
-
-                                        // Converta o objeto JSON modificado de volta em uma string
-                                        let metadata_json = metadata_json.to_string();
-
-                                        // Grave o conteúdo modificado no arquivo metadata.json
-                                        fs::write(
-                                            entrada_projeto.path().join("metadata.json"),
-                                            metadata_json,
-                                        )
-                                        .unwrap();
-
-                                        // Retorne uma mensagem de sucesso
-                                        return "Operação Executada Com Sucesso!".to_string();
-                                    } else {
-                                        // Retorne uma mensagem de erro
-                                        return "Erro ao adicionar consultor".to_string();
+                                    let metadata = fs::read_to_string(entrada_projeto.path());
+                                    if metadata.is_ok() {
+                                        let metadata = metadata.unwrap();
+                                        let metadata_json = serde_json::from_str::<serde_json::Value>(metadata.as_str());
+                                        if metadata_json.is_ok() {
+                                            let mut metadata_json = metadata_json.unwrap();
+                                            metadata_json["consultor"] = json!(consultor);
+                                            fs::write(entrada_projeto.path(), metadata_json.to_string()).unwrap();
+                                            return "Operação Executada Com Sucesso!".to_string();
+                                        }
+                                        
+                                        return "Projeto ja existe".to_string();
                                     }
                                 }
+               
                             }
                         }
+
                     }
+                  
                 }
             }
         }

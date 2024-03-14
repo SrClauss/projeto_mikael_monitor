@@ -35,7 +35,7 @@ export default function ScreenCustomerForm({ setCustomerForm, config, value = nu
             console.log(error)
         })
 
-        onSubmit()
+        onSubmit(customer)
 
 
 
@@ -161,7 +161,7 @@ export default function ScreenCustomerForm({ setCustomerForm, config, value = nu
                     </Space.Compact>
                 </Form.Item>
 
-                <Button htmlType="button" className="bg-blue-500 text-white w-full" onClick={value ? handleEditCustomer : handleSendCustomer}>Salvar</Button>
+                <Button htmlType="button" className="bg-blue-500 text-white w-full" onClick={handleSendCustomer}>Salvar</Button>
                 <FloatButton
                     icon={<ArrowLeftOutlined />}
                     onClick={() => setCustomerForm(false)}

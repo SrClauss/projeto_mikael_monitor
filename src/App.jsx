@@ -8,7 +8,7 @@ import SeachScreen from "./components/SeachScreen";
 import ScreenNovoProcesso from "./components/ScreenNovoProcesso";
 import { invoke } from "@tauri-apps/api";
 import ConfigForm from "./components/ConfigForm";
-
+import Consultor from "./components/Consultor";
 
 
 function App() {
@@ -125,9 +125,7 @@ function App() {
             setConfigForm(true)
             await dialog.message("Não existe arquivo de cofiguração para esta aplicação, configure o diretorio base e os responsáveis. Esta configuração poderá ser mudada posteriormente")
 
-            fs.writeTextFile(path + "config.json", JSON.stringify({ BASE_FOLDER: "", BRUFS: [], RESPONSAVEIS: [] })).then(() => {
-
-            })
+            
           }
           else {
             appLocalDataDir().then((path) => {
@@ -196,6 +194,18 @@ function App() {
     })
   }
 
+  const gravaConsultor = async (record, newConsultor) => {
+    const key = record.key
+    console.log("consultor: " + newConsultor)
+    const project_name = record.cliente + "-" + record.descricao
+    invoke("insert_consultor", {path: config.BASE_FOLDER, consultor: newConsultor, project_name: project_name}).then((data) => {
+      console.log(data)
+    }).catch((error) => {
+      console.log(error)
+    })
+    
+  }
+  
 
   const columns = [
     {
@@ -239,6 +249,28 @@ function App() {
       dataIndex: "consultor",
       key: "consultor",
       width: "20%",
+      render: (_, record) => (<Consultor 
+        consultor={record.consultor} 
+        fase={record.fase} 
+        estado={record.estadoConsultor} 
+        enviaConsultor={(consultor)=>{
+          const project_name = (record.cliente + "-" + record.descricao).toUpperCase().replaceAll(" ", "_")
+          invoke("insert_consultor", {path: config.BASE_FOLDER, consultor: consultor, projectName: project_name}).then((data) => {
+            console.log(data)
+          }).catch((error) => {
+            console.log(error)
+          })
+          setFilteredValues(()=>{
+            const copy = [...filteredValues]
+            copy[record.key].consultor = consultor
+            copy[record.key].estadoConsultor = 0
+            return copy
+
+          })
+
+
+        }}
+        />)
    
      
     },
