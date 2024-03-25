@@ -4,19 +4,30 @@ import { FloatButton, Space, Input, Button, Form, Tooltip, Table } from "antd";
 import { appDataDir, appLocalDataDir } from "@tauri-apps/api/path";
 import { fs } from "@tauri-apps/api";
 import { useState } from "react";
-import { stringify } from "postcss";
 
 
 const brufs = ["AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"]
 
 
 
+/**
+ * ConfigForm component for managing configuration settings.
+ * @param {Object} props - The component props.
+ * @param {function} props.setShowConfig - Function to control the visibility of the configuration form.
+ * @param {Object} props.config - The initial configuration object.
+ * @param {function} props.onSubmit - Function to handle form submission.
+ * @returns {JSX.Element} The ConfigForm component.
+ */
 export default function ConfigForm({ setShowConfig, config, onSubmit }) {
     const [baseFolder, setBaseFolder] = useState(config.BASE_FOLDER || "")
     const [responsaveis, setResponsaveis] = useState(config.RESPONSAVEIS ? config.RESPONSAVEIS.map((r, i) => { return { key: i, responsavel: r } }) : [])
     const [responsavelNome, setResponsavelNome] = useState("")
 
 
+    /**
+     * Edits the configuration and saves it to a JSON file.
+     * @returns {void}
+     */
     const editConfig = () => {
         appLocalDataDir().then(async (path) => {
             if (baseFolder) {
@@ -49,6 +60,11 @@ export default function ConfigForm({ setShowConfig, config, onSubmit }) {
 
     }
 
+    /**
+     * Handles the button click event for selecting the base folder.
+     * Opens a dialog to select a folder and sets the selected folder as the base folder.
+     * @returns {Promise<void>} A promise that resolves when the base folder is set.
+     */
     const handleBaseFolderButtonClick = async () => {
         const folder = await dialog.open({
             defaultPath: "C:/",
@@ -60,6 +76,9 @@ export default function ConfigForm({ setShowConfig, config, onSubmit }) {
 
 
     }
+    /**
+     * Handles the click event for adding a new responsavel.
+     */
     const handlerAddResponsavelButtonClick = () => {
         if (responsavelNome !== "") {
 
@@ -78,6 +97,12 @@ export default function ConfigForm({ setShowConfig, config, onSubmit }) {
 
 
 
+    /**
+     * Handles the click event for the "Excluir Responsavel" button.
+     * Removes the responsavel at the specified index from the responsaveis array.
+     *
+     * @param {number} index - The index of the responsavel to be removed.
+     */
     const handlerExcluirResponsavelButtonClick = (index) => {
         setResponsaveis(() => {
             const copy = [...responsaveis]

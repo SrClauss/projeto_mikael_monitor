@@ -11,6 +11,11 @@ import ConfigForm from "./components/ConfigForm";
 import Consultor from "./components/Consultor";
 
 
+/**
+ * The main component of the application.
+ *
+ * @returns {JSX.Element} The rendered App component.
+ */
 function App() {
 
   const [filteredValues, setFilteredValues] = useState([]);
@@ -26,12 +31,21 @@ function App() {
 
   
 
+  /**
+   * Navigates to a specific folder based on the provided record.
+   * @param {Object} record - The record object containing information about the folder.
+   */
   const navigateTo = (record) => {
     const folder = (config.BASE_FOLDER + "/" + record.fase + "/" + (record.cliente + "-" + record.descricao).replaceAll(" ", "_").toUpperCase()).replaceAll("/", "\\");
 
     invoke("goto_folder", { path: folder })
   }
 
+  /**
+   * Handles the submission of configuration.
+   *
+   * @param {Object} conf - The configuration object.
+   */
   const handleConfigSubmit = (conf) => {
     setConfig(conf)
     readAllProjects()
@@ -41,6 +55,11 @@ function App() {
 
 
 
+  /**
+   * Moves the project forward to the next folder.
+   * @param {Object} register - The project register object.
+   * @returns {Promise<void>} - A promise that resolves when the project is moved.
+   */
   const moveForward = async (register) => {
     const folders = [
       "01 - PROJETO",
@@ -77,6 +96,11 @@ function App() {
     }
 
   }
+  /**
+   * Moves the project to the previous folder based on the current folder of the register.
+   * @param {Object} register - The register object containing the project details.
+   * @returns {Promise<void>} - A promise that resolves when the project is moved.
+   */
   const moveBack = async (register) => {
     const folders = [
       "01 - PROJETO",

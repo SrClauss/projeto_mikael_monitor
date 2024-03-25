@@ -1,6 +1,16 @@
 import { Button, Input, Space } from "antd"
 import { useState, useEffect } from "react"
 import { CheckOutlined } from "@ant-design/icons"
+/**
+ * Renders the Consultor component.
+ * @param {Object} props - The component props.
+ * @param {string} props.consultor - The consultor value.
+ * @param {string} props.fase - The fase value.
+ * @param {number} props.estado - The estado value.
+ * @param {function} props.enviaConsultor - The function to send the consultor value.
+ * @param {string} props.key - The unique key for the component.
+ * @returns {JSX.Element} The rendered Consultor component.
+ */
 export default function Consultor({ consultor, fase, estado, enviaConsultor, key }) {
     const [estadoConsultor, setEstadoConsultor] = useState(estado)
     const [consultorInput, setConsultorInput] = useState(consultor)
